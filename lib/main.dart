@@ -25,7 +25,14 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 final PageController _pageController = PageController();
-int countclicks = 0;
+
+// Count the current page number
+int getCurrentPage(PageController controller) {
+  // Get the current page as a double
+  double currentPage = controller.page ?? controller.initialPage.toDouble();
+  // Round it to the nearest integer to get the page number
+  return currentPage.round();
+}
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
@@ -61,12 +68,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           )
         ],
       ),
+
       // Button for next page
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(
-              "$countclicks"); // prints how many times button isclicked on console
-          if (countclicks == 3) {
+          int currentPageNumber = getCurrentPage(_pageController);
+
+          if (currentPageNumber == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LR()),
@@ -76,7 +84,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             duration: Duration(milliseconds: 500), // Animation time
             curve: Curves.ease,
           );
-          countclicks++;
         },
         child: Icon(Icons.arrow_forward), // Button icon for next screen
       ),
