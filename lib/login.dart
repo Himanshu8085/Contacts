@@ -53,7 +53,9 @@ class _LoginState extends State<Login> {
                     );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Dashboard(_mobileController.text)),
                     );
                   } else {
                     // Show error message or handle invalid OTP

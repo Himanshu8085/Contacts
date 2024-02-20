@@ -42,3 +42,40 @@ Future<void> insertData(Database database, Map<String, dynamic> data) async {
   await database.insert('your_table', data,
       conflictAlgorithm: ConflictAlgorithm.replace);
 }
+
+// new functions
+// Function to insert data into a specific database
+Future<void> insertdata(String dbName, Map<String, dynamic> data) async {
+  Database database = await createDatabase(dbName);
+  await database.insert('your_table', data,
+      conflictAlgorithm: ConflictAlgorithm.replace);
+  await database.close();
+}
+
+// Function to fetch all data from a specific database
+Future<List<Map<String, dynamic>>> fetchData(String dbName) async {
+  Database database = await createDatabase(dbName);
+  return await database.query('your_table');
+}
+
+// Function to update data in a specific database
+Future<void> updateData(
+    String dbName, int id, Map<String, dynamic> newData) async {
+  Database database = await createDatabase(dbName);
+  await database.update(
+    'your_table',
+    newData,
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+
+// Function to delete data from a specific database
+Future<void> deleteData(String dbName, int id) async {
+  Database database = await createDatabase(dbName);
+  await database.delete(
+    'your_table',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}

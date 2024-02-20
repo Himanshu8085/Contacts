@@ -5,13 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'database.dart';
 
 class AddContact extends StatefulWidget {
+  String a = '';
+  AddContact(String s) {
+    a = s;
+  }
   @override
-  _AddContactState createState() => _AddContactState();
+  _AddContactState createState() => _AddContactState(a);
 }
 
 class _AddContactState extends State<AddContact> {
+  String mobilenodb = '';
+  _AddContactState(String a) {
+    mobilenodb = a;
+  }
   String? _selectedPrefix;
   String _firstName = '';
   String _middleName = '';
@@ -21,7 +30,6 @@ class _AddContactState extends State<AddContact> {
   DateTime _selectedDateOfBirth = DateTime.now();
   String? _selectedGender;
   String _address = '';
-  LatLng? _selectedLocation;
 
   final _formKey = GlobalKey<FormState>();
   final Completer<GoogleMapController> _controller = Completer();
@@ -172,10 +180,13 @@ class _AddContactState extends State<AddContact> {
 
 // Enter/Save button
   void _saveForm() {
-    if (_formKey.currentState!.validate() && _selectedLocation != null) {
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      // Update _address variable with the value from _addressController
+      _address = _addressController.text;
+
       // Form is validated, save the data or perform any other action here
-      // For now, just print the data
+      // Print the data after it has been updated
       print('Prefix: $_selectedPrefix');
       print('First Name: $_firstName');
       print('Middle Name: $_middleName');
@@ -185,11 +196,31 @@ class _AddContactState extends State<AddContact> {
       print('Date of Birth: $_selectedDateOfBirth');
       print('Gender: $_selectedGender');
       print('Address: $_address');
-      print('Location: $_selectedLocation');
+      _insertData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Contact Saved sucessfully')),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select a location')),
+        SnackBar(content: Text('Please chek the form')),
       );
     }
+  }
+
+  void _insertData() async {
+    Map<String, dynamic> newData = {
+      'Prefix': _selectedPrefix.toString(),
+      'first_name': _firstName.toString(),
+      'Middle_name': _middleName.toString(),
+      'Last_name': _lastName.toString(),
+      'Mobile_number': _mobileNumber.toString(),
+      'Email_ID': _email.toString(),
+      'Date_of_birth': _selectedDateOfBirth.toString(),
+      'Gender': _selectedGender.toString(),
+      'Address': _address.toString()
+      // Add more key-value pairs for other columns as needed
+    };
+
+    await insertdata(mobilenodb, newData);
   }
 }
