@@ -200,9 +200,10 @@ class _AddContactState extends State<AddContact> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Contact Saved sucessfully')),
       );
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please chek the form')),
+        SnackBar(content: Text('Please check the form')),
       );
     }
   }

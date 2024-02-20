@@ -59,6 +59,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     print(usr);
     print(dbname);
+    // _initializeData();
     if (usr == '') {
       return Center(
         child: CircularProgressIndicator(),
@@ -147,7 +148,13 @@ class _ContactManagerDashboardState extends State<ContactManagerDashboard> {
     List<Map<String, dynamic>> rows = await database.query('your_table');
 
     String fullName = '';
+    bool isFirstRow = true;
     for (var row in rows) {
+      if (isFirstRow) {
+        isFirstRow =
+            false; // Set the flag to false after skipping the first row
+        continue; // Skip processing the first row
+      }
       String prefix = row['Prefix'] ?? '';
       String firstName = row['first_name'] ?? '';
       String middleName = row['Middle_name'] ?? '';
@@ -245,7 +252,10 @@ class _ContactManagerDashboardState extends State<ContactManagerDashboard> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AddContact(dbname)),
-            );
+            ).then((value) => setState(() {
+                  contacts.clear();
+                  _initializeData();
+                }));
           },
           child: Icon(Icons.add),
         ));
