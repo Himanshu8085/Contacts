@@ -6,6 +6,7 @@ void main() {
   runApp(OnboardingApp());
 }
 
+//changes
 // onbording screen
 class OnboardingApp extends StatelessWidget {
   @override
